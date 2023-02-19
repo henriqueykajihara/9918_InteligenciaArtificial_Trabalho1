@@ -1,5 +1,9 @@
 from pathlib import Path
-      
+import time
+import os
+
+# SOU PROGRAMADOR BACKEND, PFV NÃO EXIJA QUE A INTERAÇÃO COM O USUÁRIO SEJA BONITA
+
 ESPACO = ' '
 OBSTACULO = '█'
 PONTO_INICIO = 'I'
@@ -131,6 +135,7 @@ def montaPercurso(aPosicaoAtual, dPosicoesCalculadas, aInicio):
 #********************************************************************************#
 def executa( nHandle ):
 
+    nInicio = time.time()
     aMapa =  geraMapaDePosicoes( nHandle )
     lEncontrou = False
     aInicio = pegaCoordenadas( aMapa, 'iniciais: ')
@@ -144,6 +149,7 @@ def executa( nHandle ):
     aPosicoesAbertas = []
     aPosicoesAbertas.append(aInicio)
     dPosicoesCalculadas = {}
+    nQuantidadePassos = 0
     
     while aPosicoesAbertas != [] and not lEncontrou:
         
@@ -157,29 +163,60 @@ def executa( nHandle ):
         
         aPosicoesAbertas.remove(aPosicaoAtual)                
         aPosicoesVerificados.append(aPosicaoAtual)
+        nQuantidadePassos += 1
         if (aFinal in aPosicoesVerificados):
             lEncontrou = True
             aPercurso = montaPercurso(aPosicaoAtual, dPosicoesCalculadas, aInicio)
     
     desenhaMapaCompleto(aMapa, aPercurso, aInicio, aFinal)
-
+    print('Executado em: ', time.time() - nInicio, 'ms com o melhor resultado encontrado:', nQuantidadePassos)
     print(' ----- Fim da execução ----- ')
 
 #********************************************************************************#
+def nivelValido(cNivel):
+    return ( cNivel in ['0', '1', '2', '3'] )
+    
+#********************************************************************************#
 def main():
-    cArquivo = ' '
-    while cArquivo != '0':
-        cArquivo = input("Digite o nome do arquivo ou ZERO para sair: ")
-        cPath = Path( cArquivo )
-        if cPath.is_file():
-            nHandle = open(cArquivo, 'r')
-            executa( nHandle )
-            nHandle.close()
-        else:
-            if cArquivo == '0':
-                print(" --- Fim do programa :) ---")
+    cNivel = ' '
+    while cNivel != '0':
+
+        print('+------------------------------------+')
+        print('+---------      A ESTRELA    --------+')
+        print('+------------------------------------+')
+        print( '+ Selecione o nível ():    +')
+        print( '+           1 - Fácil      +')
+        print( '+           2 - Médio      +')
+        print( '+           3 - Difícil    +')
+        print( '+           0 - Sair       +')
+        print('+------------------------------------+')
+        cNivel = input('Selecione o nível ou ZERO para sair: ')
+        print('+------------------------------------+')
+        if nivelValido(cNivel):
+            if cNivel == '1':
+                cArquivo = 'facil.txt'
+            if cNivel == '2':
+                cArquivo = 'medio.txt'
+            if cNivel == '3':
+                cArquivo = 'dificil.txt'
+            if cNivel == '0':
+                cArquivo = '0'
+
+            cPath = Path( cArquivo )
+            if cPath.is_file():
+                os.system('cls')
+                nHandle = open(cArquivo, 'r')
+                executa( nHandle )
+                nHandle.close()
             else:
-                print("Arquivo " + cArquivo +" nao encontrado!")
+                if cArquivo == '0':
+                    print(" --- Fim do programa :) ---")
+                else:
+                    print("Arquivo " + cArquivo +" nao encontrado!")                   
+        else:
+            os.system('cls')
+            print('Opção ',cNivel,' invalida!')
+        #os.system('cls')
 
 #********************************************************************************#
 if __name__ == "__main__":
