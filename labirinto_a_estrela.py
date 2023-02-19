@@ -1,8 +1,4 @@
 from pathlib import Path
-SETA_CIMA     = '▲'
-SETA_DIREITA  = '►'
-SETA_ESQUERDA = '◄'
-SETA_BAIXO    = '▼'
       
 ESPACO = ' '
 OBSTACULO = '█'
@@ -98,7 +94,7 @@ def desenhaMapaCompleto(aMapa, aPercurso, aInicio, aFinal):
             if aMapa[i][j] == 1:
                 aLinha.append(OBSTACULO)
             if ( (i,j) in aPercurso):
-                aLinha[j] = 'S'
+                aLinha[j] = '•'
         if not nTracejado:
             nTracejado = len(aLinha)
         aMapaCompleto.append(aLinha)
